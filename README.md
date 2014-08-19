@@ -13,5 +13,9 @@ export LC_ALL=UTF-8
 [Build]
 mvn clean package appassembler:assemble
 
+[Create Table]
+
+
+
 [Run]
 mvn compile exec:java -Dstorm.topology=storm.hbase.examples.kafkaTopology

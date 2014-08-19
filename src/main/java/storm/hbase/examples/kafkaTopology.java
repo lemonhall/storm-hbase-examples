@@ -64,9 +64,9 @@ public class kafkaTopology {
 
     TopologyBuilder builder = new TopologyBuilder();
 
-    builder.setSpout("word", new KafkaSpout(spoutConfig), 1);
+    builder.setSpout("word", new KafkaSpout(spoutConfig), 10);
 
-    builder.setBolt("exclaim1", new ExclamationBolt(), 3).shuffleGrouping("word");
+    builder.setBolt("exclaim1", new ExclamationBolt(), 20).shuffleGrouping("word");
 
     Config conf = new Config();
     conf.setDebug(true);
@@ -78,7 +78,7 @@ public class kafkaTopology {
       StormSubmitter.submitTopologyWithProgressBar(args[0], conf, builder.createTopology());
     }
     else {
-      conf.setMaxTaskParallelism(3);
+      conf.setMaxTaskParallelism(33);
 
       LocalCluster cluster = new LocalCluster();
       cluster.submitTopology("kafka-storm", conf, builder.createTopology());

@@ -83,26 +83,25 @@ public void prepare(Map conf, TopologyContext context, OutputCollector collector
     "/META-INF/spring/application-context.xml", ExclamationBolt.class);
     _context.registerShutdownHook();
     userRepository = _context.getBean(UserRepository.class);
+    userRepository.init();
 }
 
 @Override
 public void execute(Tuple tuple) {
   _collector.emit(tuple, new Values(tuple.getString(0) + "!!!"));
-  try{
-    userRepository.save(tuple.getString(0),"user@yahoo.com", "password");
-  }catch(Exception e){
-    log.info(e);
-  }
 
-  // List<User> users = userRepository.findAll();
-  // System.out.println("Number of users = " + users.size());
-  // System.out.println(users);
-  _collector.ack(tuple);
+  try{
+    userRepository.inc(tuple.getString(0));
+  }catch(Exception e){
+    log.error(e);
+  }finally{
+      _collector.ack(tuple);
+  }
 }
 
 @Override
 public void declareOutputFields(OutputFieldsDeclarer declarer) {
-  declarer.declare(new Fields("word"));
+  declarer.declare(new Fields("null"));
 }
 
 
